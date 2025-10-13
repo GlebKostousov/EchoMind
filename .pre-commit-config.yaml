@@ -1,0 +1,25 @@
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v6.0.0  # Версия pre-commit-hooks
+    hooks:
+      - id: check-yaml  # Проверка YAML-файлов
+      - id: end-of-file-fixer  # Добавление пустой строки в конец файла
+      - id: trailing-whitespace  # Удаление лишних пробелов
+      - id: check-added-large-files  # Проверка на большие файлы
+      - id: check-json  # Проверка JSON-файлов
+      - id: check-toml  # Проверка TOML-файлов
+      - id: detect-private-key  # Поиск приватных ключей
+      - id: name-tests-test  # Проверка имен тестов
+
+  - repo: https://github.com/psf/black
+    rev: 25.9.0  # Версия Black
+    hooks:
+      - id: black  # Форматирование кода с помощью Black
+
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.14.0  # Версия ruff для pre-commit
+    hooks:
+      - id: ruff  # Запуск линтера ruff
+        args:
+          - --fix  # Автоматическое исправление нарушений
+        # -   --unsafe-fixes  # Рискованные исправления
