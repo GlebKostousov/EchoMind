@@ -3,7 +3,9 @@ name = "echomind"
 version = "0.1.0"
 description = "Add your description here"
 requires-python = ">=3.13"
-dependencies = []
+dependencies = [
+    "langchain>=0.3.27",
+]
 
 [dependency-groups]
 dev = [
@@ -11,7 +13,8 @@ dev = [
     "ruff>=0.14.0",
 ]
 
-
+[tool.ruff]
+required-version = ">=0.11.12"
 src = [
     "src",
 ]
@@ -111,7 +114,16 @@ ignore = [
     "RUF002", # unicode docstring: игнорируем юникод в докстрингах
     "RUF003", # unicode comment: игнорируем юникод в комментариях
     "TC006", # runtime-cast-value: игнорируем проблемы с приведением типов
-    "F821"
+    "F821",
+    "D104", # Точка в конце первой строки докстринга
+    "D415", # Точка в конце первой строки докстринга
+    "D400", # Точка в конце первой строки докстринга
+    "D203", # Пустая строка перед классом
+    "D212", # В докстринге после первых тройных кавычек сразу текст
 ]
 fixable = ["ALL"]  # Автоисправление для всех правил
 unfixable = []  # Правила, которые нельзя исправлять автоматически
+
+[tool.mypy]
+strict = true
+pretty = true

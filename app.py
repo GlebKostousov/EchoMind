@@ -1,5 +1,8 @@
-def main():
-    print("Hello from echomind!")
+"""Главный модуль"""
+
+
+def main() -> None:
+    """Функция в разработке"""
 
 
 if __name__ == "__main__":
