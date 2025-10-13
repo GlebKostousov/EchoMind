@@ -4,3 +4,114 @@ version = "0.1.0"
 description = "Add your description here"
 requires-python = ">=3.13"
 dependencies = []
+
+[dependency-groups]
+dev = [
+    "pre-commit>=4.3.0",
+    "ruff>=0.14.0",
+]
+
+
+src = [
+    "src",
+]
+exclude = [
+    ".bzr",
+    ".direnv",
+    ".eggs",
+    ".git",
+    ".git-rewrite",
+    ".hg",
+    ".ipynb_checkpoints",
+    ".mypy_cache",
+    ".nox",
+    ".pants.d",
+    ".pyenv",
+    ".pytest_cache",
+    ".pytype",
+    ".ruff_cache",
+    ".svn",
+    ".tox",
+    ".venv",
+    ".vscode",
+    "__pypackages__",
+    "_build",
+    "buck-out",
+    "build",
+    "dist",
+    "node_modules",
+    "site-packages",
+    "venv",
+    ".venv",
+    "test",
+]
+
+line-length = 88  # Максимальная длина строки
+indent-width = 4  # Ширина отступа
+
+# Assume Python 3.13
+target-version = "py313"  # Целевая версия Python
+
+[tool.ruff.lint]
+select = [
+    "FAST", # FastAPI: правила для FastAPI
+    "ANN", # flake8-annotations: проверка аннотаций типов
+    "ASYNC", # flake8-async: правила для асинхронного кода
+    "I", # isort: сортировка импортов
+    "F", # Pyflakes: поиск неиспользуемых элементов
+    "S", # flake8-bandit: проверка безопасности
+    "BLE", # flake8-blind-except: запрет пустых except !пока не смог!
+    "FBT", # flake8-boolean-trap: ловушки с булевыми значениями
+    "B", # flake8-bugbear: поиск потенциальных багов
+    "COM", # flake8-commas: проверка запятых
+    "C4", # flake8-comprehensions: улучшение списковых включений
+    "DTZ", # flake8-datetimez: правила для работы с датами
+    "T10", # flake8-debugger: поиск оставленных отладочных вызовов
+    "EM", # flake8-errmsg: улучшение сообщений об ошибках
+    "ISC", # flake8-implicit-str-concat: неявная конкатенация строк
+    "ICN", # flake8-import-conventions: соглашения для импортов
+    "LOG", # flake8-logging: правила для логирования
+    "G", # flake8-logging-format: форматирование логов
+    "INP", # flake8-no-pep420: запрет неявных пространств имен
+    "PIE", # flake8-pie: улучшение стиля кода
+    "T20", # flake8-print: запрет print в продакшен-коде
+    "PYI", # flake8-pyi: правила для .pyi файлов
+    "PT",   # flake8-pytest-style: стиль для pytest
+    "Q", # flake8-quotes: проверка кавычек
+    "RSE", # flake8-raise: улучшение raise-выражений
+    "RET", # flake8-return: правила для return
+    "SLF", # flake8-self: проверка self в классах
+    "SIM", # flake8-simplify: упрощение кода
+    "SLOT", # flake8-slots: проверка __slots__ в классах
+    "TC", # flake8-type-checking: правила для типизации
+    "ARG", # flake8-unused-arguments: неиспользуемые аргументы
+    "PTH", # flake8-use-pathlib: использование pathlib вместо os.path
+    "FLY", # flynt: преобразование строк в f-strings
+    "C90", # mccabe: проверка сложности кода
+    "PD", # pandas-vet: правила для pandas
+    "N", # pep8-naming: соглашения об именовании
+    "PERF", # Perflint: оптимизация производительности
+    "E", # pycodestyle Error: ошибки стиля
+    "W", # pycodestyle Warning: предупреждения стиля
+#     "DOC",  # pydocstyle: проверка документации
+     "D",    # pycodestyle: дополнительные проверки стиля
+    "PGH", # pygrep-hooks: grep-подобные проверки
+    "PLC", # pylint Convention: соглашения pylint
+    "PLE", # pylint Error: ошибки pylint
+    "PLR", # pylint Refactor: рекомендации по рефакторингу
+    "PLW", # pylint Warning: предупреждения pylint
+    "UP", # pyupgrade: модернизация синтаксиса Python
+    "FURB", # refurb: улучшение кода
+    "TRY", # tryceratops: правила для try/except
+    "RUF", # Ruff-specific rules: специфические правила ruff
+]
+ignore = [
+    "S101", # S101 assert: разрешаем использование assert
+    "RUF001", # unicode string: игнорируем проблемы с юникод-строками
+    "RUF002", # unicode docstring: игнорируем юникод в докстрингах
+    "RUF003", # unicode comment: игнорируем юникод в комментариях
+    "TC006", # runtime-cast-value: игнорируем проблемы с приведением типов
+    "F821"
+]
+fixable = ["ALL"]  # Автоисправление для всех правил
+unfixable = []  # Правила, которые нельзя исправлять автоматически
