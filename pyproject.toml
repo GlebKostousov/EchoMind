@@ -1,16 +1,72 @@
 [project]
 name = "echomind"
 version = "0.1.0"
-description = "Add your description here"
+description = "Project for create multy RAG"
 requires-python = ">=3.13"
-dependencies = [
-    "langchain>=0.3.27",
-]
 
 [dependency-groups]
-dev = [
+core = [
+    "bm25s>=0.2.14",
+    "pymupdf>=1.26.5",
+    "sentence-transformers>=5.1.1",
+    "unstructured[all-docs]>=0.18.15",
+]
+data = [
+    "numpy>=2.3.3",
+    "pandas>=2.3.3",
+    "python-multipart>=0.0.20",
+]
+database = [
+    "alembic>=1.17.0",
+    "psycopg2-binary>=2.9.11",
+    "qdrant-client[fastembed]>=1.15.1",
+    "redis>=6.4.0",
+    "sqlalchemy>=2.0.44",
+]
+development = [
+    "mypy>=1.18.2",
     "pre-commit>=4.3.0",
     "ruff>=0.14.0",
+]
+ml = [
+    "datasets>=4.2.0",
+    "evaluate>=0.4.6",
+    "torch>=2.8.0",
+    "transformers>=4.57.0",
+]
+monitoring = [
+    "prometheus-client>=0.23.1",
+    "structlog>=25.4.0",
+]
+testing = [
+    "httpx>=0.28.1",
+    "pytest>=8.4.2",
+    "pytest-asyncio>=1.2.0",
+    "pytest-cov>=7.0.0",
+]
+utilities = [
+    "pydantic>=2.12.0",
+    "pydantic-settings>=2.11.0",
+    "rich>=14.2.0",
+    "tqdm>=4.67.1",
+    "typer>=0.19.2",
+]
+web = [
+    "fastapi>=0.119.0",
+    "streamlit>=1.50.0",
+]
+
+[tool.uv]
+default-groups = [
+    "core",
+"data",
+"database",
+"development",
+"ml",
+"monitoring",
+"testing",
+"utilities",
+"web",
 ]
 
 [tool.ruff]
