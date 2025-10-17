@@ -24,6 +24,7 @@ database = [
     "sqlalchemy>=2.0.44",
 ]
 development = [
+    "loguru>=0.7.3",
     "mypy>=1.18.2",
     "pre-commit>=4.3.0",
     "ruff>=0.14.0",
@@ -56,18 +57,6 @@ web = [
     "streamlit>=1.50.0",
 ]
 
-[tool.uv]
-default-groups = [
-    "core",
-"data",
-"database",
-"development",
-"ml",
-"monitoring",
-"testing",
-"utilities",
-"web",
-]
 
 [tool.ruff]
 required-version = ">=0.11.12"
