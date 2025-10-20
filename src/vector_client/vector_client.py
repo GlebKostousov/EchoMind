@@ -14,13 +14,16 @@ def _create_qdrant_client() -> QdrantClient:
         port=app_settings.qdrant_config.http_port,
     )
 
-    qdrant_client.create_collection(
-        collection_name=app_settings.qdrant_config.collection_name,
-        vectors_config=VectorParams(
-            size=app_settings.embedding_model_config.frida_output_token,
-            distance=Distance.COSINE,
-        ),
-    )
+    collections = qdrant_client.get_collections()
+    collection_name = app_settings.qdrant_config.collection_name
+    if collection_name not in [col.name for col in collections.collections]:
+        qdrant_client.create_collection(
+            collection_name=collection_name,
+            vectors_config=VectorParams(
+                size=app_settings.embedding_model_config.frida_output_token,
+                distance=Distance.COSINE,
+            ),
+        )
     return qdrant_client
 
 
