@@ -72,7 +72,7 @@ def _get_chunker(
 
 
 chunker = _get_chunker(
-    local_dir=app_settings.chunk_models_local_dir,
+    local_dir=app_settings.path_config.chunk_models_local_dir,
     repo_id=app_settings.chunker_config.chunk_models,
 )
 
