@@ -5,14 +5,20 @@ from pathlib import Path
 from sentence_transformers import SentenceTransformer
 
 __all = ("app_settings",)
-from pydantic import BaseModel
+from pydantic import BaseModel, ConfigDict
 from pydantic_settings import BaseSettings
 
 __all__ = ("app_settings",)
+import os
+
+os.environ["HF_HUB_DOWNLOAD_TIMEOUT"] = "300"  # 5 минут
+os.environ["HF_HUB_ETAG_TIMEOUT"] = "120"  # 2 минуты
 
 
 class Frida(BaseModel):
     """Модель для эмбеддинга"""
+
+    model_config = ConfigDict(arbitrary_types_allowed=True)
 
     model: SentenceTransformer = SentenceTransformer("ai-forever/FRIDA")
     frida_input_token: int = 512
