@@ -219,3 +219,7 @@ __marimo__/
 /архитектура от perplexity.md
 /quick_start_guide.md
 *.pdf
+/src/vector_way/chunk_model/
+/src/vector_way/embedding_model/
+/data/
+/qdrant_data/
