@@ -3,8 +3,32 @@ name = "echomind"
 version = "0.1.0"
 description = "Project for create multy RAG"
 requires-python = ">=3.13"
+dependencies = [
+    "notebook>=7.4.7",
+]
 
 [dependency-groups]
+bet = [
+    "torch>=2.8.0",
+    "torchaudio>=2.8.0",
+    "torchvision>=0.23.0",
+]
+beta = [
+    "chonkie[semantic]>=1.4.0",
+    "chromadb>=1.1.1",
+    "langchain>=0.3.27",
+    "langchain-community>=0.3.31",
+    "matplotlib>=3.10.7",
+    "networkx>=3.5",
+    "numpy>=2.3.3",
+    "ollama>=0.6.0",
+    "pydantic>=2.12.0",
+    "pydantic-settings>=2.11.0",
+    "pymupdf>=1.26.5",
+    "qdrant-client>=1.15.1",
+    "rank-bm25>=0.2.2",
+    "sentence-transformers>=5.1.1",
+]
 core = [
     "bm25s>=0.2.14",
     "pymupdf>=1.26.5",
@@ -172,3 +196,4 @@ unfixable = []  # Правила, которые нельзя исправлят
 [tool.mypy]
 strict = true
 pretty = true
+follow_untyped_imports = true
