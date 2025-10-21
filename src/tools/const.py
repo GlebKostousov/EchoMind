@@ -47,7 +47,7 @@ class AllPath(BaseModel):
 
     src_url: Path = Path(__file__).parent.parent
     chunk_models_local_dir: Path = src_url / "vector_way" / "chunk_model"
-    embedding_model_local_dir: Path = src_url / "vector_way" / "vector_way"
+    embedding_model_local_dir: Path = src_url / "vector_way" / "embedding_model"
 
 
 class Settings(BaseSettings):
