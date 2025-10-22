@@ -5,7 +5,9 @@ import time
 from collections.abc import Callable
 from functools import wraps
 
-from loguru import logger
+from src.tools.self_logger import setup_logger
+
+logger = setup_logger(__name__)
 
 
 def timer[**P, R](func: Callable[P, R]) -> Callable[P, R]:
@@ -17,7 +19,7 @@ def timer[**P, R](func: Callable[P, R]) -> Callable[P, R]:
         result = func(*args, **kwargs)
         end = time.perf_counter()
         time_elapsed: str = f"{end - start:.4f}"
-        logger.info("{}: {} сек", func.__name__, time_elapsed)
+        logger.debug("%s: %s сек", func.__name__, time_elapsed)
         return result
 
     return wrapper
