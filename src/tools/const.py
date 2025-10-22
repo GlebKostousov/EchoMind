@@ -15,6 +15,10 @@ os.environ["HF_HUB_DOWNLOAD_TIMEOUT"] = "300"  # 5 минут
 os.environ["HF_HUB_ETAG_TIMEOUT"] = "120"  # 2 минуты
 
 
+class Bm25Encoder(BaseModel):
+    name: str = "Qdrant/bm42-all-minilm-l6-v2-attentions"
+
+
 class Frida(BaseModel):
     """Модель для эмбеддинга"""
 
@@ -46,8 +50,9 @@ class AllPath(BaseModel):
     """Все пути"""
 
     src_url: Path = Path(__file__).parent.parent
-    chunk_models_local_dir: Path = src_url / "vector_way" / "chunk_model"
-    embedding_model_local_dir: Path = src_url / "vector_way" / "embedding_model"
+    chunk_models_local_dir: Path = src_url / "dense_vector" / "chunk_model"
+    embedding_model_local_dir: Path = src_url / "dense_vector" / "embedding_model"
+    bm25_model_local_dir: Path = src_url / "sparse_vector" / "bm25_model"
 
 
 class Settings(BaseSettings):
@@ -57,6 +62,7 @@ class Settings(BaseSettings):
     chunker_config: ChunkerModel = ChunkerModel()
     embedding_model_config: Frida = Frida()
     qdrant_config: Qdrant = Qdrant()
+    bm25_config: Bm25Encoder = Bm25Encoder()
 
 
 app_settings = Settings()
