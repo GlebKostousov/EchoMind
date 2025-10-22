@@ -7,8 +7,11 @@ from pathlib import Path
 from chonkie import SemanticChunker
 from huggingface_hub import snapshot_download
 from huggingface_hub.errors import HfHubHTTPError
-from loguru import logger
+from requests import RequestException, Timeout
 from src.tools.const import app_settings
+from src.tools.self_logger import setup_logger
+
+logger = setup_logger(__name__)
 
 
 def _check_model_exists(local_dir: Path | str) -> bool:
@@ -20,14 +23,14 @@ def _check_model_exists(local_dir: Path | str) -> bool:
     if isinstance(local_dir, str):
         local_dir = Path(local_dir)
     if not Path(local_dir).exists():
-        logger.error("Папка {} не существует.", local_dir)
+        logger.error("Папка %s не существует.", local_dir)
         return False
 
     config_path = local_dir / "config.json"
     if Path(config_path).exists():
         model_file = local_dir / "model.safetensors"
         if Path(model_file).exists():
-            logger.debug("Модель присутствует в кеше")
+            logger.debug("Модель для чанкинга присутствует в кеше")
             return True
 
     logger.info("Модель отсутствует, необходимо скачивание")
@@ -40,7 +43,7 @@ def _get_chunker(
 ) -> SemanticChunker:
     if not _check_model_exists(local_dir=local_dir):
         logger.info(
-            "Начинаю скачивать модель {}",
+            "Начинаю скачивать модель %s",
             app_settings.chunker_config.chunk_models,
         )
         try:
@@ -77,11 +80,11 @@ chunker = _get_chunker(
 )
 
 if __name__ == "__main__":
-    with Path(r"D:\PythonProject\EchoMind\data\test.txt", encoding="utf-8").open() as f:
+    with Path(r"/test.txt", encoding="utf-8").open() as f:
         book_text = f.read()
     chunks = chunker(book_text)
 
     for i, chunk in enumerate(chunks):
-        logger.info("\n--- Чанк {}  ---", i + 1)
-        logger.info("Текст: {}", chunk.text)
-        logger.info("Токенов: {}", chunk.token_count)
+        logger.info("\n--- Чанк %s  ---", i + 1)
+        logger.info("Текст: %s", chunk.text)
+        logger.info("Токенов: %s", chunk.token_count)
