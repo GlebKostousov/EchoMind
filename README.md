@@ -403,10 +403,9 @@ Apache License 2.0 — см. [LICENSE](LICENSE) для деталей.
 ## 🙋 Поддержка
 
 - **Документация**: [docs/](docs/)
-- **Discord**: [Присоединиться к сообществу](https://discord.gg/echomind)
 - **GitHub Issues**: [Сообщить о проблеме](https://github.com/GlebKostousov/EchoMind/issues)
 - **Email**: kostousjr@gmail.com
-- **Telegram**: [@echomind_support](https://t.me/echomind_support)
+- **Telegram**: [@echomind_support](https://t.me/GlebKostousov_OQ)
 
 ---
 
@@ -415,7 +414,6 @@ Apache License 2.0 — см. [LICENSE](LICENSE) для деталей.
 Echo Mind построен на плечах гигантов:
 - [sentence-transformers](https://github.com/UKPLab/sentence-transformers) — текстовые embeddings
 - [Qdrant](https://qdrant.tech/) — векторная БД
-- [Ollama](https://ollama.ai/) — локальные LLM
 - [FastAPI](https://fastapi.tiangolo.com/) — REST API
 - [Whisper](https://github.com/openai/whisper) — транскрипция аудио
 
@@ -428,7 +426,7 @@ Echo Mind построен на плечах гигантов:
 ![GitHub issues](https://img.shields.io/github/issues/GlebKostousov/EchoMind)
 ![GitHub pull requests](https://img.shields.io/github/issues-pr/GlebKostousov/EchoMind)
 
-**Status**: 🚧 Active Development (Pre-Alpha)
+**Status**: 🚧 Project started
 
 ---
 
