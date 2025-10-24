@@ -1,0 +1,1 @@
+"""module for ideal prompt"""
