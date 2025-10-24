@@ -214,15 +214,15 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
-/plan.md
-/project-decomposition.md
-/архитектура от perplexity.md
-/quick_start_guide.md
+/docs/plan.md
+/docs/project-decomposition.md
+/docs/архитектура от perplexity.md
+/docs/quick_start_guide.md
 *.pdf
-/src/dense_vector/chunk_model/
-/src/dense_vector/embedding_model/
-/data/
+/src/core/embeddings/dense_vector/chunk_model/
+/src/core/embeddings/dense_vector/embedding_model/
+/src/storage/data_from_local_files/
 /qdrant_data/
-/note.md
+/docs/note.md
 
-echomind-technical-spec.pdf
+docs/echomind-technical-spec.pdf
