@@ -132,6 +132,7 @@ follow_untyped_imports = true
 [tool.commitizen]
 name = "cz_conventional_commits"
 version_files = ["pyproject.toml:^version"]
+version_provider = "pep621"
 tag_format = "v$version"
 update_changelog_on_bump = true
 changelog_incremental = true
