@@ -227,3 +227,4 @@ __marimo__/
 
 docs/echomind-technical-spec.pdf
 /src/core/embeddings_models/local_file_embedding_models/
+/.safety-project.ini

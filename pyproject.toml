@@ -137,6 +137,10 @@ tag_format = "v$version"
 update_changelog_on_bump = true
 changelog_incremental = true
 
+[[tool.uv.index]]
+name = "safety"
+url = "https://pkgs.safetycli.com/repository/ezeteam/project/echomind/pypi/simple/"
+default = false
 [dependency-groups]
 dev = [
     "pre-commit>=4.3.0",
