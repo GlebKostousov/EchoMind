@@ -130,8 +130,13 @@ pretty = true
 follow_untyped_imports = true
 
 [tool.commitizen]
-version = "0.1.0"
+name = "cz_conventional_commits"
+tag_format = "v$version"
 update_changelog_on_bump = true
+changelog_incremental = true
+version_files = [
+    "pyproject.toml:version",
+]
 
 [dependency-groups]
 dev = [
