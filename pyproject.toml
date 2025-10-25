@@ -1,5 +1,6 @@
 [project]
 name = "echomind"
+version = "0.1.1"
 description = "Project for create multy RAG"
 requires-python = ">=3.13"
 
@@ -129,14 +130,11 @@ pretty = true
 follow_untyped_imports = true
 
 [tool.commitizen]
-version = "0.1.1"
 name = "cz_conventional_commits"
+version_files = ["pyproject.toml:^version"]
 tag_format = "v$version"
 update_changelog_on_bump = true
 changelog_incremental = true
-version_files = [
-    "pyproject.toml:version",
-]
 
 [dependency-groups]
 dev = [
