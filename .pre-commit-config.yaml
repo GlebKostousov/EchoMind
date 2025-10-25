@@ -22,10 +22,16 @@ repos:
       - id: ruff
         args:
           - --fix
-        # -   --unsafe-fixes  # Рискованные исправления
+        # -   --unsafe-fixes
   # Проверка коммитов на соответствие Conventional Commits
   - repo: https://github.com/commitizen-tools/commitizen
     rev: v4.9.1
     hooks:
       - id: commitizen
         stages: [ commit-msg ]
+  # Проверка новых зависимостей в safety
+  - repo: https://github.com/Lucas-C/pre-commit-hooks-safety
+    rev: v1.3.3
+    hooks:
+      - id: python-safety-dependencies-check
+        files: pyproject.toml
