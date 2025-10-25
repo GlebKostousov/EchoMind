@@ -12,14 +12,20 @@ repos:
       - id: name-tests-test  # Проверка имен тестов
 
   - repo: https://github.com/psf/black
-    rev: 25.9.0  # Версия Black
+    rev: 25.9.0
     hooks:
-      - id: black  # Форматирование кода с помощью Black
+      - id: black
 
   - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: v0.14.0  # Версия ruff для pre-commit
+    rev: v0.14.2
     hooks:
-      - id: ruff  # Запуск линтера ruff
+      - id: ruff
         args:
-          - --fix  # Автоматическое исправление нарушений
+          - --fix
         # -   --unsafe-fixes  # Рискованные исправления
+  # Проверка коммитов на соответствие Conventional Commits
+  - repo: https://github.com/commitizen-tools/commitizen
+    rev: v4.9.1
+    hooks:
+      - id: commitizen
+        stages: [ commit-msg ]
