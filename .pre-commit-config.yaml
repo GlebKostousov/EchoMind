@@ -29,9 +29,9 @@ repos:
     hooks:
       - id: commitizen
         stages: [ commit-msg ]
-  # Проверка новых зависимостей в safety
-  - repo: https://github.com/Lucas-C/pre-commit-hooks-safety
-    rev: v1.3.3
-    hooks:
-      - id: python-safety-dependencies-check
-        files: pyproject.toml
+  # Проверка новых зависимостей в safety. Работает только с poetry(
+#  - repo: https://github.com/Lucas-C/pre-commit-hooks-safety
+#    rev: v1.3.3
+#    hooks:
+#      - id: python-safety-dependencies-check
+#        files: pyproject.toml
