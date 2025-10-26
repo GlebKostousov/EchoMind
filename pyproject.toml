@@ -4,10 +4,6 @@ version = "0.1.2"
 description = "Project for create multy RAG"
 requires-python = ">=3.13"
 
-
-
-
-
 [tool.ruff]
 required-version = ">=0.11.12"
 src = [
@@ -142,6 +138,9 @@ name = "safety"
 url = "https://pkgs.safetycli.com/repository/ezeteam/project/echomind/pypi/simple/"
 default = false
 [dependency-groups]
+dense-vectore = [
+    "sentence-transformers>=5.1.2",
+]
 dev = [
     "pre-commit>=4.3.0",
     "ruff>=0.14.2",
