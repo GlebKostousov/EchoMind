@@ -219,10 +219,12 @@ __marimo__/
 /docs/архитектура от perplexity.md
 /docs/quick_start_guide.md
 *.pdf
-/src/core/embeddings/dense_vector/chunk_model/
-/src/core/embeddings/dense_vector/embedding_model/
+/src/core/embeddings_models/dense_vector/chunk_model/
+/src/core/embeddings_models/dense_vector/embedding_model/
 /src/storage/data_from_local_files/
 /qdrant_data/
 /docs/note.md
 
 docs/echomind-technical-spec.pdf
+/src/core/embeddings_models/local_file_embedding_models/
+/.safety-project.ini
