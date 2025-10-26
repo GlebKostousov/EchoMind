@@ -139,6 +139,7 @@ url = "https://pkgs.safetycli.com/repository/ezeteam/project/echomind/pypi/simpl
 default = false
 [dependency-groups]
 dense-vectore = [
+    "huggingface-hub>=0.36.0",
     "sentence-transformers>=5.1.2",
 ]
 dev = [
