@@ -138,6 +138,10 @@ name = "safety"
 url = "https://pkgs.safetycli.com/repository/ezeteam/project/echomind/pypi/simple/"
 default = false
 [dependency-groups]
+core = [
+    "pydantic>=2.12.3",
+    "pydantic-settings>=2.11.0",
+]
 dense-vectore = [
     "huggingface-hub>=0.36.0",
     "sentence-transformers>=5.1.2",
