@@ -138,13 +138,16 @@ name = "safety"
 url = "https://pkgs.safetycli.com/repository/ezeteam/project/echomind/pypi/simple/"
 default = false
 [dependency-groups]
+chunker = [
+    "chonkie>=1.4.0",
+]
 core = [
     "pydantic>=2.12.3",
     "pydantic-settings>=2.11.0",
 ]
 dense-vectore = [
     "huggingface-hub>=0.36.0",
-    "sentence-transformers>=5.1.2",
+    "sentence-transformers[openvino]>=5.1.2",
 ]
 dev = [
     "pre-commit>=4.3.0",
@@ -152,4 +155,7 @@ dev = [
     "mypy>=1.18.2",
     "commitizen>=4.9.1",
     "safety>=3.6.2",
+]
+vector-tools = [
+    "huggingface-hub[hf-xet]>=0.36.0",
 ]
