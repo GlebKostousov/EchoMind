@@ -1,143 +1,198 @@
 """Модуль для создания базового класса будущих ембеддинг векторов"""
 
+import re
 from pathlib import Path
-from typing import Literal
+from typing import Annotated, Literal, Self
 
 from huggingface_hub import repo_exists, snapshot_download
+from pydantic import BaseModel, Field, field_validator, model_validator
 from src.tools.self_logger import setup_logger
 
-from configs.custom_error import ModelExistsOnHFError
+from configs.custom_error import HFValidateTokenError, ModelExistsOnHFError
 
 # TODO: Вынеси в модуль констант
 # TODO: Сделай автосортировку импортов в ruff
 MODEL_CONFIG_TO_EXISTS_CHECK = "config_sentence_transformers.json"
 MODULES_JSON_TO_EXISTS_CHECK = "modules.json"
+BATCH_SIZE_FOR_VECTOR_ENCODER = 32
 
 logger = setup_logger(__name__)
 
 
-# class DenseVectorModel(BaseModel):
-#     is_private_model: Annotated[
-#         bool,
-#         Field(
-#             title="This is private model from HF?",
-#             description="If attribute == True, model ask a token fot HF",
-#         ),
-#     ] = False
-#     hf_token: Annotated[
-#         Optional[str],
-#         Field(
-#             title="Token to get access private model from HF",
-#             description="HuggingFace access token for private models."
-#             "\nGet your token at https://huggingface.co/settings/tokens",
-#         ),
-#     ] = None
-#     models_name_from_hf: Annotated[
-#         str,
-#         Field(
-#             title="HuggingFace model name 'org/model'",
-#             description="Model name from HF hub. You need insert it similarity",
-#         ),
-#     ]
-#     local_path_for_downloads: Annotated[
-#         str | Path,
-#         Field(
-#             title="path to folder with model",
-#             description="Path to folder with model. "
-#             "Will be downloaded automatically in first start",
-#         ),
-#     ]
-#     trust_remote_code: Annotated[
-#         bool,
-#         Field(
-#             title="Allow execution of remote code during model loading",
-#             description=(
-#                 "If True, custom Python code provided by the model author (remote code) will be executed "
-#                 "when loading the model from HuggingFace. "
-#                 "This feature is required for advanced or experimental models that include custom logic for loading, "
-#                 "typically in `model.py` or `configuration.py`. "
-#                 "Enabling this flag poses security risks, as the model author can inject arbitrary Python code which "
-#                 "will be executed in your environment. "
-#                 "Use True only for trusted sources, and never enable for unknown or unverified models. "
-#                 "For most use cases, leave this field set to False."
-#             ),
-#         ),
-#     ] = False
-#     batch_size: Annotated[
-#         int,
-#         Field(
-#             title="Batch size",
-#             description="The number of samples processed together during one forward/backward pass.",
-#         ),
-#     ] = BATCH_SIZE_FOR_VECTOR_ENCODER
-#     show_progress_bar: Annotated[
-#         bool,
-#         Field(
-#             title="Show progress bar in work",
-#             description="If True, a progress bar will be shown during
-#             long-running operations such as downloads, "
-#             "training, or batch processing. This helps visualize the process, "
-#             "track remaining time, and improve user experience. For silent or scripted runs,
-#             set to False.",
-#         ),
-#     ] = False
-#     device: Annotated[
-#         Optional[Literal["CPU", "GPU"]],
-#         Field(
-#             title="Device type",
-#             description="Select the processing device: 'CPU' or 'GPU'.
-#             If set to None, "
-#             "the application will auto-detect and select the most
-#             appropriate device available.",
-#         ),
-#     ] = None
-#
-#     @classmethod
-#     @field_validator("local_path_for_downloads")
-#     def validate_local_path(cls, value: str | Path) -> Path:
-#         path = Path(value) if isinstance(value, str) else value
-#         if not path.parent.exists():
-#             msg = "Path for downloads must be a valid filesystem path."
-#             raise ValueError(msg)
-#         return path
-#
-#     @classmethod
-#     @field_validator("models_name_from_hf")
-#     def validate_hf_model_name(cls, value: str) -> str:
-#         """Проверяет модель на соответствие организация/название"""
-#         if not re.match(r"^[\w\-]+\/[\w\-\.]+$", value):
-#
-#             raise ModelExistsOnHFError(msg)
-#         return value
-#
-#     @classmethod
-#     @field_validator("hf_token")
-#     def validate_token_format(cls, value: str | None) -> str | None:
-#         """Проверяет формат токена HF (начинается с hf_)"""
-#         if value is not None and not re.match(r"^hf_[A-Za-z0-9]{34,}$", value):
-#             msg = (
-#                 "Invalid HuggingFace token format. "
-#                 'Token should start with "hf_" followed by at least 34 characters'
-#             )
-#             raise HFValidateTokenError(msg)
-#         return value
-#
-#     @model_validator(mode="after")
-#     def validate_token_for_private(self) -> Self:
-#         """Проверяет наличие токена для приватных моделей"""
-#         if self.is_private_model and not self.hf_token:
-#             msg = (
-#                 "HuggingFace token is required for private models. "
-#                 "Get your token at https://huggingface.co/settings/tokens"
-#             )
-#             raise HFValidateTokenError(msg)
-#         return self
+# TODO: для стандартного пути создай функцию создания папки
+class BaseVectorModel(BaseModel):
+    """Класс конфигуратор для валидации данных необходимых для создания эмбеддинговых моделей"""
+
+    is_private_model: Annotated[
+        bool,
+        Field(
+            title="Это приватная модель из HF?",
+            description="Если да, то потребуется токен доступа к HF",
+        ),
+    ] = False
+
+    hf_token: Annotated[
+        str | None,
+        Field(
+            title="Токен для доступа к HF",
+            description="HF токен для доступа к приватным моделям."
+            "\nПолучить токен можно тут https://huggingface.co/settings/tokens",
+        ),
+    ] = None
+
+    models_name_from_hf: Annotated[
+        str,
+        Field(
+            title="HF имя модели в формате  'владелец/имя'",
+            description="Модель из HF hub. Вам необходимо перенести название идентично",
+        ),
+    ]
+
+    local_path_for_downloads: Annotated[
+        str | Path,
+        Field(
+            title="Путь до папки, где будет храниться модель",
+            description="Путь до папки с моделью."
+            "Она будет загружена в папку автоматически при первом запуске.",
+        ),
+    ]
+
+    trust_remote_code: Annotated[
+        bool,
+        Field(
+            title="Разрешить модели выполнять код",
+            description=(
+                "Если True, при загрузке модели из HuggingFace будет выполнен пользовательский "
+                "Python-код автора модели (удаленный код). "
+                "Требуется для продвинутых или экспериментальных моделей с пользовательской логикой "
+                "загрузки, обычно в `model.py` или `configuration.py`. "
+                "Включение создает риски безопасности, так как автор может внедрить произвольный код, "
+                "который выполнится в вашем окружении. "
+                "Используйте True только для доверенных источников, никогда для непроверенных моделей. "
+                "В большинстве случаев оставляйте False."
+            ),
+        ),
+    ] = False
+
+    batch_size: Annotated[
+        int,
+        Field(
+            title="Размер батча",
+            description="Количество образцов, обрабатываемых вместе за один прямой/обратный проход.",
+        ),
+    ] = BATCH_SIZE_FOR_VECTOR_ENCODER
+
+    show_progress_bar: Annotated[
+        bool,
+        Field(
+            title="Показывать прогресс-бар в работе",
+            description="Если True, прогресс-бар будет отображаться во время "
+            "длительных операций, таких как загрузки, обучение или пакетная обработка. "
+            "Помогает визуализировать процесс, отслеживать оставшееся время и улучшить "
+            "пользовательский опыт. Для тихих или скриптовых запусков установите False.",
+        ),
+    ] = True
+
+    device: Annotated[
+        Literal["CPU", "GPU"] | None,
+        Field(
+            title="Тип устройства",
+            description="Выберите устройство обработки: 'CPU' или 'GPU'. "
+            "Если установлено None, приложение автоматически определит и выберет "
+            "наиболее подходящее доступное устройство.",
+        ),
+    ] = None
+
+    @classmethod
+    @field_validator("local_path_for_downloads")
+    def validate_local_path(cls, value: str | Path) -> Path:
+        """
+
+        Args:
+            value (str|Path): путь пользователя до папки с моделью
+
+        Returns:
+            Возвращает корректный Path пути
+
+        Raises:
+            ValueError если путь не существует
+
+        """
+        path = Path(value) if isinstance(value, str) else value
+        if not path.parent.exists():
+            msg = "Папка для загрузки модели, не существует. "
+            raise ValueError(msg)
+        return path
+
+    @classmethod
+    @field_validator("models_name_from_hf")
+    def validate_hf_model_name(cls, value: str) -> str:
+        """
+        Проверяет модель на соответствие формату организация/название.
+
+        Args:
+            value (str): Имя модели в формате organization/model-name.
+
+        Returns:
+            Валидное имя модели.
+
+        Raises:
+            ModelExistsOnHFError: Если имя модели не соответствует формату.
+
+        """
+        pattern = r"^[\w\-]+\/[\w\-\.]+$"
+        if not re.match(pattern, value):
+            msg = (
+                f"Имя модели должно соответствовать формату 'организация/название'. "
+                f"Получено: {value}"
+            )
+            raise ModelExistsOnHFError(msg)
+        return value
+
+    @classmethod
+    @field_validator("hf_token")
+    def validate_token_format(cls, value: str | None) -> str | None:
+        """
+        Проверяет формат токена HF (начинается с hf_)
+
+        Args:
+            value (str): полученный токен
+
+        Returns:
+            Возвращает исходное значение или сваливается в ошибку
+
+        """
+        if value is not None and not re.match(r"^hf_[A-Za-z0-9]{34,}$", value):
+            msg = (
+                "Токен не соответствует стандарту HF. "
+                'Токен должен начинаться с "hf_" и содержать 34 символа'
+            )
+            raise HFValidateTokenError(msg)
+        return value
+
+    @model_validator(mode="after")
+    def validate_token_for_private(self) -> Self:
+        """
+        Проверяет наличие токена для приватных моделей
+
+        Returns:
+            Возвращает исходную модель если условия выполнены. В случае провала сваливается в ошибку.
+
+        """
+        if self.is_private_model and not self.hf_token:
+            msg = (
+                "Для приватной модели требуется HF токен. "
+                "Его можно получить тут: https://huggingface.co/settings/tokens"
+            )
+            raise HFValidateTokenError(msg)
+        return self
 
 
-# class EchoMindEmbedding:
-#
-#     def __init__(self):
-#         pass
+class EchoMindEmbedding:
+    """Базовый класс для создания любой модели эмбеддингов"""
+
+    def __init__(self) -> None:
+        """Инициализатор класса"""
 
 
 # TODO: поменяй входящие объекты на валидированные. с str на класс от BaseModel
