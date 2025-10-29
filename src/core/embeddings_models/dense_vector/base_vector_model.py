@@ -16,6 +16,9 @@ MODEL_CONFIG_TO_EXISTS_CHECK = "config_sentence_transformers.json"
 MODULES_JSON_TO_EXISTS_CHECK = "modules.json"
 BATCH_SIZE_FOR_VECTOR_ENCODER = 32
 
+# TODO: Доделай!
+STANDARD_PATH_TO_MODEL = Path()
+
 logger = setup_logger(__name__)
 
 
@@ -49,13 +52,13 @@ class BaseVectorModel(BaseModel):
     ]
 
     local_path_for_downloads: Annotated[
-        str | Path,
+        str | Path | None,
         Field(
             title="Путь до папки, где будет храниться модель",
             description="Путь до папки с моделью."
             "Она будет загружена в папку автоматически при первом запуске.",
         ),
-    ]
+    ] = None
 
     trust_remote_code: Annotated[
         bool,
@@ -105,7 +108,7 @@ class BaseVectorModel(BaseModel):
 
     @classmethod
     @field_validator("local_path_for_downloads")
-    def validate_local_path(cls, value: str | Path) -> Path:
+    def validate_local_path(cls, value: str | Path) -> Path | None:
         """
 
         Args:
@@ -118,11 +121,14 @@ class BaseVectorModel(BaseModel):
             ValueError если путь не существует
 
         """
-        path = Path(value) if isinstance(value, str) else value
-        if not path.parent.exists():
-            msg = "Папка для загрузки модели, не существует. "
-            raise ValueError(msg)
-        return path
+        if value:
+            path = Path(value) if isinstance(value, str) else value
+            if not path.parent.exists():
+                msg = "Папка для загрузки модели, не существует. "
+                raise ValueError(msg)
+            return path
+
+        return value
 
     @classmethod
     @field_validator("models_name_from_hf")
@@ -186,6 +192,13 @@ class BaseVectorModel(BaseModel):
             )
             raise HFValidateTokenError(msg)
         return self
+
+    @model_validator(mode="after")
+    def create_standard_folder(self) -> None:
+        """Если папка для модели не задана, то создается и используется стандартная."""
+        if self.local_path_for_downloads is None:
+            Path.mkdir(STANDARD_PATH_TO_MODEL, exist_ok=True)
+            self.local_path_for_downloads = STANDARD_PATH_TO_MODEL
 
 
 class EchoMindEmbedding:
