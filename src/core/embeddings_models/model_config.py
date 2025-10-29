@@ -89,7 +89,7 @@ class BaseVectorModel(BaseModel):
     ] = True
 
     device: Annotated[
-        Literal["CPU", "GPU"] | None,
+        Literal["CPU", "GPU", "cpu", "gpu", "cuda", "CUDA"] | None,
         Field(
             title="Тип устройства",
             description="Выберите устройство обработки: 'CPU' или 'GPU'. "
@@ -97,6 +97,37 @@ class BaseVectorModel(BaseModel):
             "наиболее подходящее доступное устройство.",
         ),
     ] = None
+
+    @classmethod
+    @field_validator("device")
+    def validate_device(cls, value: str) -> Literal["cpu", "cuda"]:
+        """
+        Проверяет, что значение device поддерживается SentenceTransformer.
+        Корректно проходит: 'cpu', 'gpu', 'cuda', 'CPU', 'GPU', None.
+        Все остальные — ValueError.
+
+        Args:
+            value (str): поле для проверки
+
+        Returns:
+            Проверенное значение
+
+        """
+        if value is None:
+            return value
+
+        allowed = {"cpu", "CPU", "gpu", "GPU", "cuda", "CUDA"}
+        normalized = str(value).lower()
+        if normalized not in allowed:
+            msg = (
+                f"device должен быть 'cpu' или 'cuda' (gpu автоматически определяется как 'cuda'). "
+                f"Текущее значение: '{value}'."
+            )
+            raise ValueError(msg)
+
+        if normalized == "gpu":
+            return "cuda"
+        return normalized
 
     @classmethod
     @field_validator("local_path_for_downloads")
