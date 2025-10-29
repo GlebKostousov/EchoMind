@@ -55,8 +55,7 @@ class EchoMindEmbedding:
         self._show_progress_bar: bool = validate_data.show_progress_bar
         self.is_model_downloaded: bool = False
 
-        self._model: SentenceTransformer | None = None
-        self._create_model()
+        self._model: SentenceTransformer | None = self._create_model()
 
     def _create_model(self) -> SentenceTransformer | None:
         try:
