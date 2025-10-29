@@ -116,6 +116,7 @@ ignore = [
     "D205", #   1 blank line required between summary line and description
     "SIM210", #  Remove unnecessary `True if ... else False`
     "FBT001", # Boolean-typed positional argument in function definition
+    "E501", # Line too long
 ]
 fixable = ["ALL"]  # Автоисправление для всех правил
 unfixable = []  # Правила, которые нельзя исправлять автоматически
