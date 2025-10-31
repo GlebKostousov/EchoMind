@@ -1,4 +1,17 @@
 repos:
+  - repo: https://github.com/astral-sh/uv-pre-commit
+    rev: 0.9.7
+    hooks:
+      - id: uv-lock
+      - id: uv-export
+        args:
+          - --quiet
+          - --no-hashes
+          - --frozen
+          - --no-header
+          - --no-annotate
+          - --no-default-groups
+          - --output-file=requirements.txt
   - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v6.0.0  # Версия pre-commit-hooks
     hooks:
@@ -10,14 +23,12 @@ repos:
       - id: check-toml  # Проверка TOML-файлов
       - id: detect-private-key  # Поиск приватных ключей
       - id: name-tests-test  # Проверка имен тестов
-
   - repo: https://github.com/psf/black
     rev: 25.9.0
     hooks:
       - id: black
-
   - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: v0.14.2
+    rev: v0.14.3
     hooks:
       - id: ruff
         args:
