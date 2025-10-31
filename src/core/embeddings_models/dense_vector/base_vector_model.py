@@ -47,23 +47,74 @@ class EchoMindEmbedding:
         """
         self._validate_data: BaseVectorModel = validate_data
 
-        self._batch_size: int = validate_data.batch_size
-        self._show_progress_bar: bool = validate_data.show_progress_bar
-        self.is_model_downloaded: bool = False
+        self.batch_size: int = validate_data.batch_size
+        self.show_progress_bar: bool = validate_data.show_progress_bar
+        self._is_model_downloaded: bool = False
 
         self._model: SentenceTransformer | None = self._create_model()
-        self.quant = quant
-        self.type_of_quant_backend = type_of_quant_backend
+        self._quant = quant
+        self._type_of_quant_backend = type_of_quant_backend
+
+    @property
+    def is_model_downloaded(self) -> bool:
+        """
+        Безопасный способ узнать скачана ли модель
+
+        Returns:
+            Возвращает True, если модель скачана
+
+        """
+        return self._is_model_downloaded
+
+    @property
+    def quant(self) -> bool:
+        """
+        Уточнение информации о том квантована ли эта модель
+
+        Returns:
+            Возвращает True, если модель квантована
+
+        """
+        return self._quant
+
+    @quant.setter
+    def quant(self, quant: bool) -> None:
+        if not isinstance(quant, bool):
+            msg = "quant must be a bool"
+            logger.error(msg)
+            raise TypeError(msg)
+
+        if quant:
+            logger.info("Запускаю процесс квантования")
+            self._quant = quant
+            self._model = self._create_model()
+            logger.info("Квантование успешно пройдено")
+
+        else:
+            logger.info("Запускаю процесс подготовки не квантованной модели")
+            self._quant = False
+            self._model = self._create_model()
 
     def _create_model(self) -> SentenceTransformer | None:
         try:
-            self.is_model_downloaded = self._validate_exists_local_model()
-            if not self.is_model_downloaded and self._check_existing_model_repo():
+            self._is_model_downloaded = self._validate_exists_local_model()
+            if not self._is_model_downloaded and self._check_existing_model_repo():
                 self.download_model_for_local_path()
-                self.is_model_downloaded = True
+                self._is_model_downloaded = True
+
+            path = str(self._generate_local_path())
+
+            if self._quant:
+                return SentenceTransformer(
+                    model_name_or_path=path,
+                    local_files_only=True,
+                    trust_remote_code=self._validate_data.trust_remote_code,
+                    device=self._validate_data.device,
+                    backend=self._type_of_quant_backend,
+                )
 
             return SentenceTransformer(
-                model_name_or_path=self._validate_data.local_path_for_downloads,
+                model_name_or_path=path,
                 local_files_only=True,
                 trust_remote_code=self._validate_data.trust_remote_code,
                 device=self._validate_data.device,
@@ -126,10 +177,9 @@ class EchoMindEmbedding:
 
         """
         local_path: Path = self._generate_local_path()
-        model_dir = Path(local_path)
         required_files = [
-            model_dir / MODULES_JSON_TO_EXISTS_CHECK,
-            model_dir / MODEL_CONFIG_TO_EXISTS_CHECK,
+            local_path / MODULES_JSON_TO_EXISTS_CHECK,
+            local_path / MODEL_CONFIG_TO_EXISTS_CHECK,
         ]
         result = all(file.exists() for file in required_files)
         if not result:
@@ -151,7 +201,7 @@ class EchoMindEmbedding:
         # папка / название модели / quant (если да)
         model_name = self._validate_data.models_name_from_hf
         path = self._validate_data.local_path_for_downloads / model_name
-        return (path / "quant") if self.quant else path
+        return (path / "quant") if self._quant else path
 
     def download_model_for_local_path(self) -> None:
         """
@@ -185,25 +235,25 @@ class EchoMindEmbedding:
             logger.info(msg)
 
             local_path = path_to_download_model
-            parent_path = local_path.parent if self.quant else local_path
+            parent_path = local_path.parent if self._quant else local_path
 
             snapshot_download(
                 repo_id=model_name_from_hf,
                 local_dir=parent_path,
                 cache_dir=parent_path,
             )
-            if self.quant:
+            if self._quant:
                 quant_model = SentenceTransformer(
                     model_name_or_path=str(parent_path),
-                    backend=self.type_of_quant_backend,
+                    backend=self._type_of_quant_backend,
                 )
                 msg = f"Модель {model_name_from_hf} квантована"
                 logger.info(msg)
                 quant_model.save_pretrained(str(local_path))
 
             msg = (
-                f"Модель {model_name_from_hf} загружена по пути: {local_path if self.quant else parent_path}.\n"
-                f"Было применено квантование -> {'Да' if self.quant else 'Нет'}."
+                f"Модель {model_name_from_hf} загружена по пути: {local_path if self._quant else parent_path}.\n"
+                f"Было применено квантование -> {'Да' if self._quant else 'Нет'}."
             )
             logger.info(msg)
 
