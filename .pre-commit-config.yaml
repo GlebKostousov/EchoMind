@@ -10,7 +10,6 @@ repos:
           - --frozen
           - --no-header
           - --no-annotate
-          - --no-default-groups
           - --output-file=requirements.txt
   - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v6.0.0  # Версия pre-commit-hooks
