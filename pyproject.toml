@@ -88,7 +88,7 @@ select = [
     "E", # pycodestyle Error: ошибки стиля
     "W", # pycodestyle Warning: предупреждения стиля
 #     "DOC",  # pydocstyle: проверка документации
-     "D",    # pycodestyle: дополнительные проверки стиля
+    "D", # pycodestyle: дополнительные проверки стиля
     "PGH", # pygrep-hooks: grep-подобные проверки
     "PLC", # pylint Convention: соглашения pylint
     "PLE", # pylint Error: ошибки pylint
@@ -143,7 +143,6 @@ chunker = [
     "chonkie>=1.4.0",
 ]
 core = [
-    "fastapi>=0.120.3",
     "pydantic>=2.12.3",
     "pydantic-settings>=2.11.0",
 ]
