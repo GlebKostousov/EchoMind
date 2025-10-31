@@ -143,6 +143,7 @@ chunker = [
     "chonkie>=1.4.0",
 ]
 core = [
+    "fastapi>=0.120.3",
     "pydantic>=2.12.3",
     "pydantic-settings>=2.11.0",
 ]
