@@ -3,6 +3,29 @@ name = "echomind"
 version = "0.1.2"
 description = "Project for create multy RAG"
 requires-python = ">=3.13"
+[dependency-groups]
+chunker = [
+    "chonkie>=1.4.0",
+]
+core = [
+    "pydantic>=2.12.3",
+    "pydantic-settings>=2.11.0",
+]
+dense-vectore = [
+    "huggingface-hub>=0.36.0",
+    "sentence-transformers[openvino]>=5.1.2",
+]
+dev = [
+    "pre-commit>=4.3.0",
+    "ruff>=0.14.2",
+    "mypy>=1.18.2",
+    "commitizen>=4.9.1",
+    "safety>=3.6.2",
+]
+vector-tools = [
+    "huggingface-hub[hf-xet]>=0.36.0",
+]
+
 
 [tool.ruff]
 required-version = ">=0.11.12"
@@ -138,25 +161,3 @@ changelog_incremental = true
 name = "safety"
 url = "https://pkgs.safetycli.com/repository/ezeteam/project/echomind/pypi/simple/"
 default = false
-[dependency-groups]
-chunker = [
-    "chonkie>=1.4.0",
-]
-core = [
-    "pydantic>=2.12.3",
-    "pydantic-settings>=2.11.0",
-]
-dense-vectore = [
-    "huggingface-hub>=0.36.0",
-    "sentence-transformers[openvino]>=5.1.2",
-]
-dev = [
-    "pre-commit>=4.3.0",
-    "ruff>=0.14.2",
-    "mypy>=1.18.2",
-    "commitizen>=4.9.1",
-    "safety>=3.6.2",
-]
-vector-tools = [
-    "huggingface-hub[hf-xet]>=0.36.0",
-]
