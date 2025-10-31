@@ -122,3 +122,5 @@ app_settings = Settings(
     bm25_config=Bm25Encoder(),
     qdrant_config=Qdrant(),
 )
+MODEL_CONFIG_TO_EXISTS_CHECK = "config_sentence_transformers.json"
+MODULES_JSON_TO_EXISTS_CHECK = "modules.json"

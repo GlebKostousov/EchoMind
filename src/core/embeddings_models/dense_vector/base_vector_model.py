@@ -7,13 +7,9 @@ from huggingface_hub import repo_exists, snapshot_download
 from sentence_transformers import SentenceTransformer
 from src.tools.self_logger import setup_logger
 
+from configs.const import MODEL_CONFIG_TO_EXISTS_CHECK, MODULES_JSON_TO_EXISTS_CHECK
 from configs.custom_error import HFValidateTokenError, ModelExistsOnHFError
 from core.embeddings_models.model_config import BaseVectorModel
-
-# TODO: Вынеси в модуль констант
-MODEL_CONFIG_TO_EXISTS_CHECK = "config_sentence_transformers.json"
-MODULES_JSON_TO_EXISTS_CHECK = "modules.json"
-
 
 logger = setup_logger(__name__)
 
