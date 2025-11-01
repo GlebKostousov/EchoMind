@@ -1,17 +1,21 @@
 """Модуль для хранения констант и конфигураций"""
 
+__all = (
+    "app_settings",
+    "MODEL_CONFIG_TO_EXISTS_CHECK",
+    "MODULES_JSON_TO_EXISTS_CHECK",
+    "BATCH_SIZE_FOR_VECTOR_ENCODER",
+    "STANDARD_PATH_TO_MODEL",
+)
+
+import os
 from abc import ABC
 from pathlib import Path
 from typing import Annotated, Literal
 
-from sentence_transformers import SentenceTransformer
-
-__all = ("app_settings",)
 from pydantic import BaseModel, ConfigDict, Field
 from pydantic_settings import BaseSettings
-
-__all__ = ("app_settings",)
-import os
+from sentence_transformers import SentenceTransformer
 
 os.environ["HF_HUB_DOWNLOAD_TIMEOUT"] = "300"  # 5 минут
 os.environ["HF_HUB_ETAG_TIMEOUT"] = "120"  # 2 минуты
@@ -124,3 +128,6 @@ app_settings = Settings(
 )
 MODEL_CONFIG_TO_EXISTS_CHECK = "config_sentence_transformers.json"
 MODULES_JSON_TO_EXISTS_CHECK = "modules.json"
+BATCH_SIZE_FOR_VECTOR_ENCODER = 32
+# TODO: Доделай!
+STANDARD_PATH_TO_MODEL = Path()
