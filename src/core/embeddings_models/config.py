@@ -1,21 +1,17 @@
 """Модуль для настройки эмбеддинг моделей"""
 
+__all__ = ("BaseEmbeddingConfig",)
 import re
 from pathlib import Path
 from typing import Annotated, Literal, Self
 
 from pydantic import BaseModel, Field, field_validator, model_validator
 
+from configs.const import BATCH_SIZE_FOR_VECTOR_ENCODER, STANDARD_PATH_TO_MODEL
 from configs.custom_error import HFValidateTokenError, ModelExistsOnHFError
 
-# TODO: Вынеси в модуль констант
-BATCH_SIZE_FOR_VECTOR_ENCODER = 32
 
-# TODO: Доделай!
-STANDARD_PATH_TO_MODEL = Path()
-
-
-class BaseVectorModel(BaseModel):
+class BaseEmbeddingConfig(BaseModel):
     """Класс конфигуратор для валидации данных необходимых для создания эмбеддинговых моделей"""
 
     is_private_model: Annotated[
@@ -100,7 +96,7 @@ class BaseVectorModel(BaseModel):
 
     @classmethod
     @field_validator("device")
-    def validate_device(cls, value: str) -> Literal["cpu", "cuda"]:
+    def validate_device(cls, value: str) -> Literal["cpu", "cuda"] | None:
         """
         Проверяет, что значение device поддерживается SentenceTransformer.
         Корректно проходит: 'cpu', 'gpu', 'cuda', 'CPU', 'GPU', None.
@@ -125,9 +121,9 @@ class BaseVectorModel(BaseModel):
             )
             raise ValueError(msg)
 
-        if normalized == "gpu":
+        if normalized in {"gpu", "cuda"}:
             return "cuda"
-        return normalized
+        return "cpu"
 
     @classmethod
     @field_validator("local_path_for_downloads")
