@@ -1,5 +1,6 @@
 """Модуль для создания базового класса будущих ембеддинг векторов"""
 
+__all__ = ("BaseEmbedder",)
 from pathlib import Path
 from typing import Literal
 
@@ -9,17 +10,17 @@ from src.tools.self_logger import setup_logger
 
 from configs.const import MODEL_CONFIG_TO_EXISTS_CHECK, MODULES_JSON_TO_EXISTS_CHECK
 from configs.custom_error import HFValidateTokenError, ModelExistsOnHFError
-from core.embeddings_models.model_config import BaseVectorModel
+from core.embeddings_models.config import BaseEmbeddingConfig
 
 logger = setup_logger(__name__)
 
 
-class EchoMindEmbedding:
+class BaseEmbedder:
     """Базовый класс для создания любой модели эмбеддингов"""
 
     def __init__(
         self,
-        validate_data: BaseVectorModel,
+        validate_data: BaseEmbeddingConfig,
         quant: bool,
         type_of_quant_backend: Literal["torch", "onnx", "openvino"] = "openvino",
     ) -> None:
@@ -40,12 +41,12 @@ class EchoMindEmbedding:
             3.4 Выполняем пункт `3.1`
 
         Args:
-            validate_data (BaseVectorModel): провалидированные данные, необходимые для создания
+            validate_data (BaseEmbeddingConfig): провалидированные данные, необходимые для создания
             quant (bool): указание о необходимости квантования модели
             type_of_quant_backend(str): встроенный в SentenceTransformer способ квантования
 
         """
-        self._validate_data: BaseVectorModel = validate_data
+        self._validate_data: BaseEmbeddingConfig = validate_data
 
         self.batch_size: int = validate_data.batch_size
         self.show_progress_bar: bool = validate_data.show_progress_bar
